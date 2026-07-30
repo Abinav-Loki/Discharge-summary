@@ -8,7 +8,7 @@ import jsPDF from 'jspdf';
 
 export const App: React.FC = () => {
   const [data, setData] = useState<DischargeSummaryData>(INITIAL_DISCHARGE_DATA);
-  const [isEditMode, setIsEditMode] = useState<boolean>(true);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isPdfExporting, setIsPdfExporting] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);

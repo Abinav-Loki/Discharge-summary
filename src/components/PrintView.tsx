@@ -11,7 +11,7 @@ interface PrintViewProps {
 
 export const PrintView: React.FC<PrintViewProps> = ({
   data,
-  isEditMode = true,
+  isEditMode = false,
   isPdfExporting = false,
   onUpdate
 }) => {
