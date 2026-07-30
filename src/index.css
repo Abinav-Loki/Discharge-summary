@@ -454,3 +454,211 @@ textarea.form-control {
   }
 }
 
+/* ==========================================================================
+   MOBILE & RESPONSIVE LAYOUT ENHANCEMENTS
+   ========================================================================== */
+
+/* Mobile Navigation Header Bar (Visible on < 1024px screens) */
+.mobile-header-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 12px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.mobile-menu-btn {
+  background: #1e293b;
+  color: #38bdf8;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-btn:hover {
+  background: #334155;
+  color: #ffffff;
+}
+
+/* Sidebar Drawer Backdrop Overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  transition: opacity 0.25s ease;
+}
+
+/* Responsive App Main Layout */
+.app-layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #e2e8f0;
+  font-family: var(--font-body);
+}
+
+.app-sidebar-container {
+  width: 320px;
+  background: #ffffff;
+  border-right: 1px solid #cbd5e1;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+  z-index: 2001;
+  overflow-y: auto;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-main-container {
+  flex: 1;
+  padding: 30px 20px;
+  overflow-y: auto;
+  min-width: 0; /* Prevents flex items from overflowing parent width */
+}
+
+/* Paper Page Responsive Adjustments */
+.paper-page {
+  background: #ffffff;
+  color: #000000;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.45;
+  padding: 36px 40px;
+  max-width: 850px;
+  margin: 0 auto 30px auto;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  position: relative;
+  width: 100%;
+}
+
+/* Patient Header Grid & Responsive Layouts */
+.patient-header-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+  margin-bottom: 16px;
+  font-size: 12px;
+}
+
+.inline-field-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+}
+
+.inline-field-item {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* Medication Table Responsive Scroll Container */
+.table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 8px;
+  border: 1px solid #000000;
+  border-radius: 4px;
+}
+
+.medication-table {
+  width: 100%;
+  min-width: 580px; /* Ensures table headers don't squish horizontally on mobile */
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+/* Sign-Off Responsive Container */
+.signoff-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 8px;
+  gap: 16px;
+}
+
+/* Media Query Breakpoint: Tablet & Mobile (< 1024px) */
+@media (max-width: 1023px) {
+  .mobile-header-bar {
+    display: flex;
+  }
+
+  .app-layout-wrapper {
+    flex-direction: column;
+  }
+
+  .app-sidebar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .app-sidebar-container.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay.open {
+    display: block;
+  }
+
+  .app-main-container {
+    padding: 16px 12px;
+  }
+
+  .paper-page {
+    padding: 24px 18px;
+    margin-bottom: 20px;
+  }
+}
+
+/* Media Query Breakpoint: Mobile Phones (< 640px) */
+@media (max-width: 639px) {
+  .patient-header-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .paper-page {
+    padding: 18px 12px;
+    font-size: 11.5px;
+  }
+
+  .signoff-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .inline-field-group {
+    gap: 8px 10px;
+  }
+}
+
+

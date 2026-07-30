@@ -144,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => onProcedureTypeChange(card.type)}
                 style={{
                   background: isSelected ? '#ffffff' : '#ffffff',
-                  border: isSelected ? `2px solid ${card.color}` : '1fr solid #cbd5e1',
+                  border: isSelected ? `2px solid ${card.color}` : '1px solid #cbd5e1',
                   borderRadius: '10px',
                   padding: '12px 14px',
                   cursor: 'pointer',

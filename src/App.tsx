@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { PrintView } from './components/PrintView';
 import { INITIAL_DISCHARGE_DATA, PRESET_PROCEDURE_TEMPLATES, PATIENT_RECORD_DATABASE, SAMPLE_PATIENTS_LIST } from './data/referenceData';
 import { DischargeSummaryData, ProcedureType } from './types/discharge';
-import { Printer, Download, Check, User, Search, Edit3, Lock } from 'lucide-react';
+import { Printer, Download, Check, User, Search, Edit3, Lock, Menu, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -12,6 +12,7 @@ export const App: React.FC = () => {
   const [isPdfExporting, setIsPdfExporting] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   const printAreaRef = useRef<HTMLDivElement>(null);
 
@@ -24,6 +25,7 @@ export const App: React.FC = () => {
     if (PATIENT_RECORD_DATABASE[uhid]) {
       setData(PATIENT_RECORD_DATABASE[uhid]);
       triggerToast(`Loaded record for: ${PATIENT_RECORD_DATABASE[uhid].patientInfo.patientName}`);
+      setIsMobileMenuOpen(false);
     }
   };
 
@@ -42,6 +44,7 @@ export const App: React.FC = () => {
       }
     }));
     triggerToast(`Template switched to: ${type}`);
+    setIsMobileMenuOpen(false);
   };
 
   const handleToggleEditMode = () => {
@@ -58,6 +61,7 @@ export const App: React.FC = () => {
   const handleExportPDF = async () => {
     if (!printAreaRef.current) return;
     setIsPdfExporting(true);
+    setIsMobileMenuOpen(false);
     triggerToast('Generating Hospital PDF (Selected Medications Only)...');
 
     // Small delay to allow React to render only selected medication rows
@@ -99,7 +103,7 @@ export const App: React.FC = () => {
   ];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#e2e8f0', fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div className="app-layout-wrapper">
       {/* Toast Notification */}
       {toastMessage && (
         <div style={{
@@ -122,46 +126,114 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      {/* LEFT SIDEBAR CONTROLS */}
-      <aside className="no-print" style={{
-        width: '320px',
-        background: '#ffffff',
-        borderRight: '1px solid #cbd5e1',
-        padding: '20px 18px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px',
-        position: 'sticky',
-        top: 0,
-        height: '100vh',
-        boxShadow: '2px 0 10px rgba(0,0,0,0.05)',
-        zIndex: 10,
-        overflowY: 'auto'
-      }}>
-        {/* Hospital Branding */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingBottom: '14px', borderBottom: '1px solid #e2e8f0' }}>
+      {/* MOBILE TOP NAVIGATION BAR (< 1024px) */}
+      <div className="mobile-header-bar no-print">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '10px',
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
             background: 'linear-gradient(135deg, #0284c7, #0369a1)',
             color: '#ffffff',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontWeight: 800,
-            fontSize: '1.2rem'
+            fontSize: '1rem'
           }}>
             A
           </div>
           <div>
-            <h1 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: 0, lineHeight: 1.2 }}>
-              ASCAS FERTILITY
-            </h1>
-            <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>
-              Discharge Summary Module
-            </p>
+            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.1 }}>
+              ASCAS HOSPITAL
+            </div>
+            <div style={{ fontSize: '0.7rem', color: '#38bdf8' }}>
+              Discharge Summary
+            </div>
           </div>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={handleToggleEditMode}
+            style={{
+              background: isEditMode ? '#10b981' : '#334155',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '6px',
+              padding: '4px 8px',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            {isEditMode ? <Edit3 size={12} /> : <Lock size={12} />}
+            {isEditMode ? 'Editing' : 'Locked'}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="mobile-menu-btn"
+          >
+            {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            <span>Menu</span>
+          </button>
+        </div>
+      </div>
+
+      {/* MOBILE SIDEBAR OVERLAY BACKDROP */}
+      <div 
+        className={`sidebar-overlay ${isMobileMenuOpen ? 'open' : ''}`} 
+        onClick={() => setIsMobileMenuOpen(false)}
+      />
+
+      {/* RESPONSIVE CONTROL SIDEBAR */}
+      <aside className={`app-sidebar-container no-print ${isMobileMenuOpen ? 'open' : ''}`}>
+        {/* Hospital Branding & Close Mobile Btn */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '14px', borderBottom: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, #0284c7, #0369a1)',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 800,
+              fontSize: '1.2rem'
+            }}>
+              A
+            </div>
+            <div>
+              <h1 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: 0, lineHeight: 1.2 }}>
+                ASCAS FERTILITY
+              </h1>
+              <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>
+                Discharge Summary Module
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#64748b',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              padding: '4px'
+            }}
+          >
+            <X size={20} />
+          </button>
         </div>
 
         {/* EDIT MODE TOGGLE OPTION */}
@@ -302,7 +374,7 @@ export const App: React.FC = () => {
         {/* EXPORT & PRINT ACTIONS */}
         <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <button
-            onClick={() => window.print()}
+            onClick={() => { setIsMobileMenuOpen(false); window.print(); }}
             style={{
               width: '100%',
               background: '#ffffff',
@@ -347,7 +419,7 @@ export const App: React.FC = () => {
       </aside>
 
       {/* RIGHT MAIN CONTENT: EDITABLE SUMMARY DOCUMENT */}
-      <main style={{ flex: 1, padding: '30px 20px', overflowY: 'auto' }}>
+      <main className="app-main-container">
         <div style={{ maxWidth: '880px', margin: '0 auto' }}>
           <div className="no-print" style={{
             background: isEditMode ? '#ecfdf5' : '#f8fafc',
@@ -367,7 +439,7 @@ export const App: React.FC = () => {
             {isEditMode ? (
               <span>✏️ <strong>Edit Mode ON:</strong> Click on any field below to edit live. Checked medications (☑) will be included when generating PDF / Printing.</span>
             ) : (
-              <span>🔒 <strong>Edit Mode OFF (Read-Only):</strong> Document locked. Click "Enable Edit" in the sidebar to modify fields.</span>
+              <span>🔒 <strong>Edit Mode OFF (Read-Only):</strong> Document locked. Click "Enable Edit" in top bar / menu to modify fields.</span>
             )}
           </div>
 
@@ -384,3 +456,4 @@ export const App: React.FC = () => {
     </div>
   );
 };
+

@@ -393,7 +393,7 @@ export const PrintView: React.FC<PrintViewProps> = ({
         </div>
 
         {/* Patient Header Fields */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 24px', marginBottom: '16px', fontSize: '12px' }}>
+        <div className="patient-header-grid">
           <div>
             <strong>Patient name:</strong>{' '}
             <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['patientInfo', 'patientName'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none', fontWeight: 600 }}>
@@ -450,9 +450,13 @@ export const PrintView: React.FC<PrintViewProps> = ({
 
           {procedureType === 'Cervical Cerclage' ? (
             <div style={{ paddingLeft: '4px', fontSize: '11.5px', lineHeight: '1.6' }}>
-              <div style={{ marginBottom: '4px' }}>
-                <strong>Gestational age:</strong> <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'gestationalWeeks'], e.currentTarget.textContent || '')}>{obstetricFertility.gestationalWeeks || '____'}</span> weeks <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'gestationalDays'], e.currentTarget.textContent || '')}>{obstetricFertility.gestationalDays || '____'}</span> days &nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>EDD:</strong> <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'edd'], e.currentTarget.textContent || '')}>{obstetricFertility.edd || '__________________'}</span>
+              <div className="inline-field-group" style={{ marginBottom: '4px' }}>
+                <span className="inline-field-item">
+                  <strong>Gestational age:</strong> <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'gestationalWeeks'], e.currentTarget.textContent || '')}>{obstetricFertility.gestationalWeeks || '____'}</span> weeks <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'gestationalDays'], e.currentTarget.textContent || '')}>{obstetricFertility.gestationalDays || '____'}</span> days
+                </span>
+                <span className="inline-field-item">
+                  <strong>EDD:</strong> <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'edd'], e.currentTarget.textContent || '')}>{obstetricFertility.edd || '__________________'}</span>
+                </span>
               </div>
               <div style={{ marginBottom: '4px' }}>
                 <strong>Indication:</strong>{' '}
@@ -460,9 +464,13 @@ export const PrintView: React.FC<PrintViewProps> = ({
                 {renderTickBox(obstetricFertility.indicationType === 'Ultrasound-indicated', `Ultrasound-indicated (short cervix ${obstetricFertility.cervicalLengthMm || '____'} mm)`, () => handleTextChange(['obstetricFertility', 'indicationType'], 'Ultrasound-indicated'))}
                 {renderTickBox(obstetricFertility.indicationType === 'Exam-indicated (rescue)', 'Exam-indicated (rescue)', () => handleTextChange(['obstetricFertility', 'indicationType'], 'Exam-indicated (rescue)'))}
               </div>
-              <div>
-                <strong>Obstetric history:</strong> G <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'obstetricGravida'], e.currentTarget.textContent || '')}>{obstetricFertility.obstetricGravida ?? '____'}</span> P <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'obstetricPara'], e.currentTarget.textContent || '')}>{obstetricFertility.obstetricPara ?? '____'}</span> &nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>Prior losses/PTB:</strong> <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'priorLossesOrPTB'], e.currentTarget.textContent || '')}>{obstetricFertility.priorLossesOrPTB || '____________________________________'}</span>
+              <div className="inline-field-group">
+                <span className="inline-field-item">
+                  <strong>Obstetric history:</strong> G <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'obstetricGravida'], e.currentTarget.textContent || '')}>{obstetricFertility.obstetricGravida ?? '____'}</span> P <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'obstetricPara'], e.currentTarget.textContent || '')}>{obstetricFertility.obstetricPara ?? '____'}</span>
+                </span>
+                <span className="inline-field-item">
+                  <strong>Prior losses/PTB:</strong> <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['obstetricFertility', 'priorLossesOrPTB'], e.currentTarget.textContent || '')}>{obstetricFertility.priorLossesOrPTB || '____________________________________'}</span>
+                </span>
               </div>
             </div>
           ) : (
@@ -513,23 +521,31 @@ export const PrintView: React.FC<PrintViewProps> = ({
                 {renderTickBox(procedureDetails.anaesthesiaType === 'MAC/sedation', 'MAC/sedation', () => handleAnaesthesiaChange('MAC/sedation'))}
                 {renderTickBox(procedureDetails.anaesthesiaType === 'Local', 'Local', () => handleAnaesthesiaChange('Local'))}
               </div>
-              <div>
-                <strong>Distension medium:</strong>{' '}
-                <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'distensionMedium'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                  {procedureDetails.distensionMedium || 'Normal saline'}
-                </span> &nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>Fluid deficit:</strong>{' '}
-                <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'fluidDeficitMl'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                  {procedureDetails.fluidDeficitMl || '________'}
-                </span> mL &nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>Estimated blood loss:</strong>{' '}
-                <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'estimatedBloodLossMl'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                  {procedureDetails.estimatedBloodLossMl || '________'}
-                </span> mL &nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>Operative time:</strong>{' '}
-                <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'operativeTimeMinutes'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                  {procedureDetails.operativeTimeMinutes || '________'}
-                </span> min
+              <div className="inline-field-group">
+                <span className="inline-field-item">
+                  <strong>Distension medium:</strong>{' '}
+                  <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'distensionMedium'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                    {procedureDetails.distensionMedium || 'Normal saline'}
+                  </span>
+                </span>
+                <span className="inline-field-item">
+                  <strong>Fluid deficit:</strong>{' '}
+                  <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'fluidDeficitMl'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                    {procedureDetails.fluidDeficitMl || '________'}
+                  </span> mL
+                </span>
+                <span className="inline-field-item">
+                  <strong>Estimated blood loss:</strong>{' '}
+                  <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'estimatedBloodLossMl'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                    {procedureDetails.estimatedBloodLossMl || '________'}
+                  </span> mL
+                </span>
+                <span className="inline-field-item">
+                  <strong>Operative time:</strong>{' '}
+                  <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'operativeTimeMinutes'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                    {procedureDetails.operativeTimeMinutes || '________'}
+                  </span> min
+                </span>
               </div>
             </div>
           )}
@@ -537,25 +553,31 @@ export const PrintView: React.FC<PrintViewProps> = ({
           {/* CERVICAL CERCLAGE PROCEDURE DETAILS */}
           {procedureType === 'Cervical Cerclage' && (
             <div style={{ paddingLeft: '4px', fontSize: '11.5px', lineHeight: '1.7' }}>
-              <div style={{ marginBottom: '6px' }}>
-                <strong>Procedure:</strong>{' '}
-                {renderTickBox(procedureDetails.cerclageType !== 'Shirodkar cerclage', 'McDonald cerclage', () => handleCerclageTypeToggle('McDonald cerclage'))}
-                {renderTickBox(procedureDetails.cerclageType === 'Shirodkar cerclage', 'Shirodkar cerclage', () => handleCerclageTypeToggle('Shirodkar cerclage'))}
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>Suture:</strong>{' '}
-                {renderTickBox(procedureDetails.sutureMaterial !== 'Other', 'Mersilene tape', () => handleSutureToggle('Mersilene tape'))}
-                {renderTickBox(procedureDetails.sutureMaterial === 'Other', 'Other', () => handleSutureToggle('Other'))}
+              <div className="inline-field-group" style={{ marginBottom: '6px' }}>
+                <span className="inline-field-item">
+                  <strong>Procedure:</strong>{' '}
+                  {renderTickBox(procedureDetails.cerclageType !== 'Shirodkar cerclage', 'McDonald cerclage', () => handleCerclageTypeToggle('McDonald cerclage'))}
+                  {renderTickBox(procedureDetails.cerclageType === 'Shirodkar cerclage', 'Shirodkar cerclage', () => handleCerclageTypeToggle('Shirodkar cerclage'))}
+                </span>
+                <span className="inline-field-item">
+                  <strong>Suture:</strong>{' '}
+                  {renderTickBox(procedureDetails.sutureMaterial !== 'Other', 'Mersilene tape', () => handleSutureToggle('Mersilene tape'))}
+                  {renderTickBox(procedureDetails.sutureMaterial === 'Other', 'Other', () => handleSutureToggle('Other'))}
+                </span>
               </div>
-              <div style={{ marginBottom: '6px' }}>
-                <strong>Anesthesia:</strong>{' '}
-                {renderTickBox(procedureDetails.anaesthesiaType === 'Spinal', 'Spinal', () => handleAnaesthesiaChange('Spinal'))}
-                {renderTickBox(procedureDetails.anaesthesiaType === 'Epidural', 'Epidural', () => handleAnaesthesiaChange('Epidural'))}
-                {renderTickBox(procedureDetails.anaesthesiaType === 'General', 'General', () => handleAnaesthesiaChange('General'))}
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>Estimated blood loss:</strong>{' '}
-                <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'estimatedBloodLossMl'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                  {procedureDetails.estimatedBloodLossMl || '________'}
-                </span> mL
+              <div className="inline-field-group" style={{ marginBottom: '6px' }}>
+                <span className="inline-field-item">
+                  <strong>Anesthesia:</strong>{' '}
+                  {renderTickBox(procedureDetails.anaesthesiaType === 'Spinal', 'Spinal', () => handleAnaesthesiaChange('Spinal'))}
+                  {renderTickBox(procedureDetails.anaesthesiaType === 'Epidural', 'Epidural', () => handleAnaesthesiaChange('Epidural'))}
+                  {renderTickBox(procedureDetails.anaesthesiaType === 'General', 'General', () => handleAnaesthesiaChange('General'))}
+                </span>
+                <span className="inline-field-item">
+                  <strong>Estimated blood loss:</strong>{' '}
+                  <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'estimatedBloodLossMl'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                    {procedureDetails.estimatedBloodLossMl || '________'}
+                  </span> mL
+                </span>
               </div>
               <div style={{ marginBottom: '6px' }}>
                 <strong>Fetal heart tones:</strong> Pre-op: <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'preOpFetalHeartRate'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>{procedureDetails.preOpFetalHeartRate || '________'}</span> bpm &nbsp;&nbsp; Post-op: <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'postOpFetalHeartRate'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>{procedureDetails.postOpFetalHeartRate || '________'}</span> bpm
@@ -579,16 +601,19 @@ export const PrintView: React.FC<PrintViewProps> = ({
                   {procedureDetails.proceduresPerformed || 'Suction & Sharp D&C'}
                 </span>
               </div>
-              <div style={{ marginBottom: '6px' }}>
-                <strong>Anesthesia:</strong>{' '}
-                {renderTickBox(procedureDetails.anaesthesiaType === 'General', 'General', () => handleAnaesthesiaChange('General'))}
-                {renderTickBox(procedureDetails.anaesthesiaType === 'MAC/sedation', 'MAC/sedation', () => handleAnaesthesiaChange('MAC/sedation'))}
-                {renderTickBox(procedureDetails.anaesthesiaType === 'Local/paracervical' || procedureDetails.anaesthesiaType === 'Local', 'Local/paracervical', () => handleAnaesthesiaChange('Local/paracervical'))}
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>Estimated blood loss:</strong>{' '}
-                <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'estimatedBloodLossMl'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                  {procedureDetails.estimatedBloodLossMl || '________'}
-                </span> mL
+              <div className="inline-field-group" style={{ marginBottom: '6px' }}>
+                <span className="inline-field-item">
+                  <strong>Anesthesia:</strong>{' '}
+                  {renderTickBox(procedureDetails.anaesthesiaType === 'General', 'General', () => handleAnaesthesiaChange('General'))}
+                  {renderTickBox(procedureDetails.anaesthesiaType === 'MAC/sedation', 'MAC/sedation', () => handleAnaesthesiaChange('MAC/sedation'))}
+                  {renderTickBox(procedureDetails.anaesthesiaType === 'Local/paracervical' || procedureDetails.anaesthesiaType === 'Local', 'Local/paracervical', () => handleAnaesthesiaChange('Local/paracervical'))}
+                </span>
+                <span className="inline-field-item">
+                  <strong>Estimated blood loss:</strong>{' '}
+                  <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'estimatedBloodLossMl'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                    {procedureDetails.estimatedBloodLossMl || '________'}
+                  </span> mL
+                </span>
               </div>
               <div style={{ marginBottom: '6px' }}>
                 <strong>Specimens:</strong>{' '}
@@ -597,15 +622,18 @@ export const PrintView: React.FC<PrintViewProps> = ({
                 {renderTickBox(procedureDetails.specimenDetails?.includes('genetics') ?? false, 'Karyotype/genetics sent', () => handleSpecimensToggle('Sent', 'Karyotype/genetics sent'))}
                 {renderTickBox(procedureDetails.specimensOption === 'None', 'None', () => handleSpecimensToggle('None'))}
               </div>
-              <div>
-                <strong>Rh status:</strong>{' '}
-                {renderTickBox(procedureDetails.rhStatus === 'Positive', 'Positive', () => handleRhStatusToggle('Positive'))}
-                {renderTickBox(procedureDetails.rhStatus === 'Negative', 'Negative', () => handleRhStatusToggle('Negative'))}
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>Rh immune globulin given:</strong>{' '}
-                {renderTickBox(procedureDetails.rhImmunoglobinGiven === 'Yes', 'Yes', () => handleRhIgToggle('Yes'))}
-                {renderTickBox(procedureDetails.rhImmunoglobinGiven === 'No', 'No', () => handleRhIgToggle('No'))}
-                {renderTickBox(procedureDetails.rhImmunoglobinGiven === 'N/A', 'N/A', () => handleRhIgToggle('N/A'))}
+              <div className="inline-field-group">
+                <span className="inline-field-item">
+                  <strong>Rh status:</strong>{' '}
+                  {renderTickBox(procedureDetails.rhStatus === 'Positive', 'Positive', () => handleRhStatusToggle('Positive'))}
+                  {renderTickBox(procedureDetails.rhStatus === 'Negative', 'Negative', () => handleRhStatusToggle('Negative'))}
+                </span>
+                <span className="inline-field-item">
+                  <strong>Rh immune globulin given:</strong>{' '}
+                  {renderTickBox(procedureDetails.rhImmunoglobinGiven === 'Yes', 'Yes', () => handleRhIgToggle('Yes'))}
+                  {renderTickBox(procedureDetails.rhImmunoglobinGiven === 'No', 'No', () => handleRhIgToggle('No'))}
+                  {renderTickBox(procedureDetails.rhImmunoglobinGiven === 'N/A', 'N/A', () => handleRhIgToggle('N/A'))}
+                </span>
               </div>
             </div>
           )}
@@ -627,15 +655,19 @@ export const PrintView: React.FC<PrintViewProps> = ({
                 {renderTickBox(procedureDetails.anaesthesiaType === 'Local', 'Local', () => handleAnaesthesiaChange('Local'))}
                 {renderTickBox(procedureDetails.anaesthesiaType === 'None', 'None', () => handleAnaesthesiaChange('None'))}
               </div>
-              <div style={{ marginBottom: '6px' }}>
-                <strong>Estimated blood loss:</strong>{' '}
-                <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'estimatedBloodLossMl'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                  {procedureDetails.estimatedBloodLossMl || '________'}
-                </span> mL &nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>Operative time:</strong>{' '}
-                <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'operativeTimeMinutes'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                  {procedureDetails.operativeTimeMinutes || '________'}
-                </span> min
+              <div className="inline-field-group" style={{ marginBottom: '6px' }}>
+                <span className="inline-field-item">
+                  <strong>Estimated blood loss:</strong>{' '}
+                  <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'estimatedBloodLossMl'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                    {procedureDetails.estimatedBloodLossMl || '________'}
+                  </span> mL
+                </span>
+                <span className="inline-field-item">
+                  <strong>Operative time:</strong>{' '}
+                  <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['procedureDetails', 'operativeTimeMinutes'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                    {procedureDetails.operativeTimeMinutes || '________'}
+                  </span> min
+                </span>
               </div>
               <div style={{ marginBottom: '6px' }}>
                 <strong>Complications:</strong>{' '}
@@ -717,28 +749,111 @@ export const PrintView: React.FC<PrintViewProps> = ({
             )}
           </div>
 
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px', border: '1px solid #000000' }}>
-            <thead>
-              <tr style={{ background: '#f1f5f9', borderBottom: '1px solid #000000' }}>
-                <th className="no-print-checkbox" style={{ border: '1px solid #000000', padding: '4px', width: '36px', textAlign: 'center', fontSize: '15px' }}>☐</th>
-                <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'left', width: '28%' }}>Medication</th>
-                <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'left', width: '32%' }}>Generic</th>
-                <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', width: '14%' }}>Dose</th>
-                <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', width: '13%' }}>Freq (M-A-N)</th>
-                <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', width: '13%' }}>Duration</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* 10 STANDARD MEDICATIONS */}
-              {displayMedications.map((med, index) => (
+          <div className="table-responsive-wrapper">
+            <table className="medication-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px' }}>
+              <thead>
+                <tr style={{ background: '#f1f5f9', borderBottom: '1px solid #000000' }}>
+                  <th className="no-print-checkbox" style={{ border: '1px solid #000000', padding: '4px', width: '36px', textAlign: 'center', fontSize: '15px' }}>☐</th>
+                  <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'left', width: '28%' }}>Medication</th>
+                  <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'left', width: '32%' }}>Generic</th>
+                  <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', width: '14%' }}>Dose</th>
+                  <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', width: '13%' }}>Freq (M-A-N)</th>
+                  <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', width: '13%' }}>Duration</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* 10 STANDARD MEDICATIONS */}
+                {displayMedications.map((med, index) => (
+                  <tr 
+                    key={med.id || index} 
+                    className={!med.isSelected ? 'unselected-med-row' : ''}
+                    style={{ background: med.isSelected ? '#f0f9ff' : 'transparent' }}
+                  >
+                    <td 
+                      className="no-print-checkbox"
+                      onClick={() => handleToggleMedication(med.medicationName, med.genericName, med.strength, med.frequencyMAN)}
+                      title={isEditMode ? "Click to toggle prescription box" : undefined}
+                      style={{
+                        border: '1px solid #000000',
+                        padding: '4px',
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        fontSize: '16px',
+                        cursor: isEditMode ? 'pointer' : 'default',
+                        userSelect: 'none',
+                        color: med.isSelected ? '#0284c7' : '#64748b'
+                      }}
+                    >
+                      {med.isSelected ? '☑' : '☐'}
+                    </td>
+                    <td style={{ border: '1px solid #000000', padding: '3px 6px', fontWeight: med.isSelected ? 'bold' : 'normal' }}>
+                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                        {med.medicationName}
+                      </span>
+                    </td>
+                    <td style={{ border: '1px solid #000000', padding: '3px 6px' }}>
+                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                        {med.genericName}
+                      </span>
+                    </td>
+                    <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
+                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                        {med.strength || '______'}
+                      </span>
+                    </td>
+                    <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center', fontWeight: 600 }}>
+                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                        {med.frequencyMAN || '________'}
+                      </span>
+                    </td>
+                    <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
+                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                        {med.durationDisplay ? `${med.durationDisplay} days` : '____ days'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+
+                {/* CUSTOM ADDED MEDICATIONS */}
+                {displayCustomMeds.map((med, idx) => (
+                  <tr key={med.id || `custom-${idx}`} style={{ background: '#f0f9ff' }}>
+                    <td className="no-print-checkbox" style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', fontWeight: 'bold', fontSize: '16px', color: '#0284c7' }}>☑</td>
+                    <td style={{ border: '1px solid #000000', padding: '3px 6px', fontWeight: 'bold' }}>
+                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                        {med.medicationName}
+                      </span>
+                    </td>
+                    <td style={{ border: '1px solid #000000', padding: '3px 6px' }}>
+                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                        {med.genericName}
+                      </span>
+                    </td>
+                    <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
+                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                        {med.strength}
+                      </span>
+                    </td>
+                    <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center', fontWeight: 600 }}>
+                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                        {med.frequencyMAN}
+                      </span>
+                    </td>
+                    <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
+                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                        {med.durationDays ? `${med.durationDays} days` : '____ days'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+
+                {/* 11TH ROW: "OTHER:" MEDICATIONS */}
                 <tr 
-                  key={med.id || index} 
-                  className={!med.isSelected ? 'unselected-med-row' : ''}
-                  style={{ background: med.isSelected ? '#f0f9ff' : 'transparent' }}
+                  className={!isOtherSelected ? 'unselected-med-row' : ''}
+                  style={{ background: isOtherSelected ? '#f0f9ff' : 'transparent' }}
                 >
                   <td 
                     className="no-print-checkbox"
-                    onClick={() => handleToggleMedication(med.medicationName, med.genericName, med.strength, med.frequencyMAN)}
+                    onClick={handleToggleOtherMed}
                     title={isEditMode ? "Click to toggle prescription box" : undefined}
                     style={{
                       border: '1px solid #000000',
@@ -748,147 +863,66 @@ export const PrintView: React.FC<PrintViewProps> = ({
                       fontSize: '16px',
                       cursor: isEditMode ? 'pointer' : 'default',
                       userSelect: 'none',
-                      color: med.isSelected ? '#0284c7' : '#64748b'
+                      color: isOtherSelected ? '#0284c7' : '#64748b'
                     }}
                   >
-                    {med.isSelected ? '☑' : '☐'}
+                    {isOtherSelected ? '☑' : '☐'}
                   </td>
-                  <td style={{ border: '1px solid #000000', padding: '3px 6px', fontWeight: med.isSelected ? 'bold' : 'normal' }}>
-                    <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                      {med.medicationName}
-                    </span>
-                  </td>
-                  <td style={{ border: '1px solid #000000', padding: '3px 6px' }}>
-                    <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                      {med.genericName}
-                    </span>
-                  </td>
-                  <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
-                    <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                      {med.strength || '______'}
-                    </span>
-                  </td>
-                  <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center', fontWeight: 600 }}>
-                    <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                      {med.frequencyMAN || '________'}
-                    </span>
-                  </td>
-                  <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
-                    <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                      {med.durationDisplay ? `${med.durationDisplay} days` : '____ days'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-
-              {/* CUSTOM ADDED MEDICATIONS */}
-              {displayCustomMeds.map((med, idx) => (
-                <tr key={med.id || `custom-${idx}`} style={{ background: '#f0f9ff' }}>
-                  <td className="no-print-checkbox" style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', fontWeight: 'bold', fontSize: '16px', color: '#0284c7' }}>☑</td>
                   <td style={{ border: '1px solid #000000', padding: '3px 6px', fontWeight: 'bold' }}>
-                    <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                      {med.medicationName}
+                    Other:{' '}
+                    <span 
+                      contentEditable={isEditMode} 
+                      suppressContentEditableWarning 
+                      onBlur={(e) => handleOtherMedFieldChange('medicationName', e.currentTarget.textContent || '')} 
+                      style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none', minWidth: '80px', display: 'inline-block' }}
+                    >
+                      {otherMed.medicationName || '______________'}
                     </span>
                   </td>
                   <td style={{ border: '1px solid #000000', padding: '3px 6px' }}>
-                    <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                      {med.genericName}
+                    <span 
+                      contentEditable={isEditMode} 
+                      suppressContentEditableWarning 
+                      onBlur={(e) => handleOtherMedFieldChange('genericName', e.currentTarget.textContent || '')} 
+                      style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none', minWidth: '80px', display: 'inline-block' }}
+                    >
+                      {otherMed.genericName || '__________________'}
                     </span>
                   </td>
                   <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
-                    <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                      {med.strength}
+                    <span 
+                      contentEditable={isEditMode} 
+                      suppressContentEditableWarning 
+                      onBlur={(e) => handleOtherMedFieldChange('strength', e.currentTarget.textContent || '')} 
+                      style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                    >
+                      {otherMed.strength || '______'}
                     </span>
                   </td>
                   <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center', fontWeight: 600 }}>
-                    <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                      {med.frequencyMAN}
+                    <span 
+                      contentEditable={isEditMode} 
+                      suppressContentEditableWarning 
+                      onBlur={(e) => handleOtherMedFieldChange('frequencyMAN', e.currentTarget.textContent || '')} 
+                      style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                    >
+                      {otherMed.frequencyMAN || '________'}
                     </span>
                   </td>
                   <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
-                    <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                      {med.durationDays ? `${med.durationDays} days` : '____ days'}
+                    <span 
+                      contentEditable={isEditMode} 
+                      suppressContentEditableWarning 
+                      onBlur={(e) => handleOtherMedFieldChange('durationDays', e.currentTarget.textContent || '')} 
+                      style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                    >
+                      {otherMed.durationDays ? `${otherMed.durationDays} days` : '____ days'}
                     </span>
                   </td>
                 </tr>
-              ))}
-
-              {/* 11TH ROW: "OTHER:" MEDICATION (MATCHING PDF EXACT SPECIFICATION) */}
-              <tr 
-                className={!isOtherSelected ? 'unselected-med-row' : ''}
-                style={{ background: isOtherSelected ? '#f0f9ff' : 'transparent' }}
-              >
-                <td 
-                  className="no-print-checkbox"
-                  onClick={handleToggleOtherMed}
-                  title={isEditMode ? "Click to toggle prescription box" : undefined}
-                  style={{
-                    border: '1px solid #000000',
-                    padding: '4px',
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                    fontSize: '16px',
-                    cursor: isEditMode ? 'pointer' : 'default',
-                    userSelect: 'none',
-                    color: isOtherSelected ? '#0284c7' : '#64748b'
-                  }}
-                >
-                  {isOtherSelected ? '☑' : '☐'}
-                </td>
-                <td style={{ border: '1px solid #000000', padding: '3px 6px', fontWeight: 'bold' }}>
-                  Other:{' '}
-                  <span 
-                    contentEditable={isEditMode} 
-                    suppressContentEditableWarning 
-                    onBlur={(e) => handleOtherMedFieldChange('medicationName', e.currentTarget.textContent || '')} 
-                    style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none', minWidth: '80px', display: 'inline-block' }}
-                  >
-                    {otherMed.medicationName || '______________'}
-                  </span>
-                </td>
-                <td style={{ border: '1px solid #000000', padding: '3px 6px' }}>
-                  <span 
-                    contentEditable={isEditMode} 
-                    suppressContentEditableWarning 
-                    onBlur={(e) => handleOtherMedFieldChange('genericName', e.currentTarget.textContent || '')} 
-                    style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none', minWidth: '80px', display: 'inline-block' }}
-                  >
-                    {otherMed.genericName || '__________________'}
-                  </span>
-                </td>
-                <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
-                  <span 
-                    contentEditable={isEditMode} 
-                    suppressContentEditableWarning 
-                    onBlur={(e) => handleOtherMedFieldChange('strength', e.currentTarget.textContent || '')} 
-                    style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
-                  >
-                    {otherMed.strength || '______'}
-                  </span>
-                </td>
-                <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center', fontWeight: 600 }}>
-                  <span 
-                    contentEditable={isEditMode} 
-                    suppressContentEditableWarning 
-                    onBlur={(e) => handleOtherMedFieldChange('frequencyMAN', e.currentTarget.textContent || '')} 
-                    style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
-                  >
-                    {otherMed.frequencyMAN || '________'}
-                  </span>
-                </td>
-                <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
-                  <span 
-                    contentEditable={isEditMode} 
-                    suppressContentEditableWarning 
-                    onBlur={(e) => handleOtherMedFieldChange('durationDays', e.currentTarget.textContent || '')} 
-                    style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
-                  >
-                    {otherMed.durationDays ? `${otherMed.durationDays} days` : '____ days'}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
 
           {/* Quick button to add extra custom medication rows */}
           {isEditMode && !isPdfExporting && (
@@ -951,7 +985,7 @@ export const PrintView: React.FC<PrintViewProps> = ({
             {renderTickBox(instructions.conditionAtDischarge.painControlled, 'Pain controlled', () => handleToggleCondition('painControlled'))}
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingTop: '8px' }}>
+          <div className="signoff-container">
             <div>
               <strong>Physician signature:</strong>{' '}
               {approvals.consultantSignatureImage ? (
