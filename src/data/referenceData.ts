@@ -152,6 +152,24 @@ export const PROCEDURE_INSTRUCTIONS_TEMPLATES: Record<ProcedureType, {
     defaultDiet: "High fiber diet with adequate hydration to prevent constipation and straining.",
     defaultActivity: "Strict pelvic rest (no intercourse). No restriction beyond pelvic rest / modified activity as specified.",
     defaultWoundCare: "Pelvic rest until cleared. Cervical surveillance scan scheduled in 1-2 weeks."
+  },
+  'Other': {
+    whatToExpect: [
+      "Follow specific recovery guidelines as instructed by your surgeon.",
+      "Rest and recover as advised."
+    ],
+    painRelief: [
+      "Take prescribed medications as directed."
+    ],
+    callImmediatelySigns: [
+      "Fever or chills",
+      "Severe pain not relieved by medication",
+      "Heavy bleeding or abnormal discharge",
+      "Any sudden shortness of breath or chest pain"
+    ],
+    defaultDiet: "Regular or as tolerated.",
+    defaultActivity: "Rest as tolerated. Avoid strenuous activities.",
+    defaultWoundCare: "Keep wound/site clean and dry."
   }
 };
 
@@ -675,6 +693,7 @@ export const PRESET_PROCEDURE_TEMPLATES: Record<ProcedureType, string> = {
   'General Procedure': `Under adequate anesthesia in sterile fashion, the procedure was performed without complications. Hemostasis was achieved. Patient shifted to recovery in stable condition.`,
   'Dilation & Curettage (D&C)': `Under adequate anesthesia in the dorsal lithotomy position, the patient was prepped and draped in sterile fashion and the bladder emptied. Examination under anesthesia revealed an anteverted, normal-sized uterus. The anterior lip of the cervix was grasped with a single-tooth tenaculum and the uterus sounded to 7 cm. Suction and/or gentle sharp curettage was performed until the cavity was empty and a gritty texture was appreciated in all quadrants. Instruments were removed with good hemostasis. Patient shifted to recovery in stable condition.`,
   'Hysteroscopy': `Under adequate anesthesia in the dorsal lithotomy position, the patient was prepped and draped in sterile fashion and the bladder emptied. The anterior lip of the cervix was grasped, the uterus sounded to 7 cm, and the cervix dilated to admit the 4 mm hysteroscope, which was introduced under direct vision with normal saline distension. A systematic survey of the endocervical canal and uterine cavity was performed; both tubal ostia were visualized and the endometrium appeared healthy. The hysteroscope was withdrawn with adequate hemostasis. Patient shifted to recovery in stable condition.`,
-  'Cervical Cerclage': `Under adequate spinal / epidural anesthesia in the dorsal lithotomy position, the patient was prepped and draped in sterile fashion and the bladder emptied. The cervix was exposed with a weighted speculum and retractors and grasped gently with ring forceps. A Mersilene tape was placed in purse-string fashion circumferentially around the cervix near the level of the internal os, taking bites at approximately 12, 9, 6, and 3 o'clock and avoiding lateral vessels. The tape was drawn snug to close the internal os and tied posteriorly, with suture ends left long to facilitate later removal. Hemostasis was confirmed. Patient shifted to recovery in stable condition.`
+  'Cervical Cerclage': `Under adequate spinal / epidural anesthesia in the dorsal lithotomy position, the patient was prepped and draped in sterile fashion and the bladder emptied. The cervix was exposed with a weighted speculum and retractors and grasped gently with ring forceps. A Mersilene tape was placed in purse-string fashion circumferentially around the cervix near the level of the internal os, taking bites at approximately 12, 9, 6, and 3 o'clock and avoiding lateral vessels. The tape was drawn snug to close the internal os and tied posteriorly, with suture ends left long to facilitate later removal. Hemostasis was confirmed. Patient shifted to recovery in stable condition.`,
+  'Other': `Under adequate anesthesia, the procedure was performed in sterile fashion. Good hemostasis achieved. Patient recovered well and shifted to ward.`
 };
 

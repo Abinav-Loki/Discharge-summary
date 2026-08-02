@@ -83,6 +83,13 @@ export const Header: React.FC<HeaderProps> = ({
       subtitle: 'Hospital Summary',
       icon: FileCheck2,
       color: '#10b981'
+    },
+    {
+      type: 'Other',
+      title: 'Other / Manual',
+      subtitle: 'Manual Summary',
+      icon: FileText,
+      color: '#64748b'
     }
   ];
 

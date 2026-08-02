@@ -99,7 +99,8 @@ export const App: React.FC = () => {
     { type: 'Hysteroscopy', label: 'Hysteroscopy', subtitle: 'Diagnostic / Operative', icon: '🔬', color: '#0284c7' },
     { type: 'Cervical Cerclage', label: 'Cervical Cerclage', subtitle: 'Cervical Stitch', icon: '🤰', color: '#ec4899' },
     { type: 'Dilation & Curettage (D&C)', label: 'D&C Procedure', subtitle: 'Dilation & Curettage', icon: '🩺', color: '#8b5cf6' },
-    { type: 'General Procedure', label: 'General Discharge', subtitle: 'Hospital Summary', icon: '📋', color: '#10b981' }
+    { type: 'General Procedure', label: 'General Discharge', subtitle: 'Hospital Summary', icon: '📋', color: '#10b981' },
+    { type: 'Other', label: 'Other / Manual', subtitle: 'Manual Discharge Summary', icon: '📝', color: '#64748b' }
   ];
 
   return (

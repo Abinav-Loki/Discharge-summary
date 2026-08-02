@@ -661,4 +661,30 @@ textarea.form-control {
   }
 }
 
+/* Print CSS to hide unchecked boxes when printing */
+@media print {
+  .unchecked-box-print-hide {
+    display: none !important;
+  }
+  [contenteditable="true"],
+  [contenteditable],
+  .print-view-container [contenteditable],
+  .paper-page [contenteditable] {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Hide editable outlines during PDF generation */
+.pdf-export-active [contenteditable="true"],
+.pdf-export-active [contenteditable],
+.pdf-export-active .tickbox-option {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+
 

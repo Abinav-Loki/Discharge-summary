@@ -1,4 +1,4 @@
-export type ProcedureType = 'General Procedure' | 'Dilation & Curettage (D&C)' | 'Hysteroscopy' | 'Cervical Cerclage';
+export type ProcedureType = 'General Procedure' | 'Dilation & Curettage (D&C)' | 'Hysteroscopy' | 'Cervical Cerclage' | 'Other';
 
 export type DischargeStatus = 'Draft' | 'Pending Approval' | 'Approved' | 'Finalized' | 'Discharged';
 export type SaveStatus = 'Saved' | 'Saving...' | 'Unsaved Changes';

@@ -328,7 +328,7 @@ export const ProcedureSection: React.FC<ProcedureSectionProps> = ({
         </div>
 
         {/* D&C / Pathology Specimen & Rh Status (Merged from D&C reference) */}
-        {(procedureType === 'Dilation & Curettage (D&C)' || procedureType === 'General Procedure') && (
+        {(procedureType === 'Dilation & Curettage (D&C)' || procedureType === 'General Procedure' || procedureType === 'Other') && (
           <div className="form-grid-3" style={{ marginBottom: '16px', background: 'var(--slate-50)', padding: '14px', borderRadius: 'var(--radius-sm)' }}>
             <div className="form-group">
               <label className="form-label">Specimens / Pathology Sent</label>

@@ -42,30 +42,36 @@ export const PrintView: React.FC<PrintViewProps> = ({
   };
 
   // Helper for big, clear, clickable tick boxes
-  const renderTickBox = (checked: boolean, label: string, onClick?: () => void) => (
-    <span
-      onClick={isEditMode ? onClick : undefined}
-      style={{
-        cursor: isEditMode ? 'pointer' : 'default',
-        userSelect: 'none',
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '4px',
-        marginRight: '12px'
-      }}
-    >
-      <span style={{
-        fontSize: '16px',
-        fontWeight: 'bold',
-        color: checked ? '#0284c7' : '#64748b',
-        lineHeight: '1',
-        verticalAlign: 'middle'
-      }}>
-        {checked ? '☑' : '☐'}
+  const renderTickBox = (checked: boolean, label: string, onClick?: () => void) => {
+    if ((!isEditMode || isPdfExporting) && !checked) {
+      return null;
+    }
+    return (
+      <span
+        className={`tickbox-option ${!checked ? 'unchecked-box-print-hide' : ''}`}
+        onClick={isEditMode ? onClick : undefined}
+        style={{
+          cursor: isEditMode ? 'pointer' : 'default',
+          userSelect: 'none',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '4px',
+          marginRight: '12px'
+        }}
+      >
+        <span style={{
+          fontSize: '16px',
+          fontWeight: 'bold',
+          color: checked ? '#0284c7' : '#64748b',
+          lineHeight: '1',
+          verticalAlign: 'middle'
+        }}>
+          {checked ? '☑' : '☐'}
+        </span>
+        <span>{label}</span>
       </span>
-      <span>{label}</span>
-    </span>
-  );
+    );
+  };
 
   // Procedure Details State Toggles
   const handleHysteroscopyToggle = (key: keyof NonNullable<typeof procedureDetails.hysteroscopySubtypes>) => {
@@ -362,12 +368,13 @@ export const PrintView: React.FC<PrintViewProps> = ({
       case 'Cervical Cerclage': return 'Cervical Cerclage';
       case 'Dilation & Curettage (D&C)': return 'Dilation and Curettage (D&C)';
       case 'General Procedure': return 'General procedure / hospital discharge';
+      case 'Other': return 'Manual Discharge Summary';
       default: return procedureType;
     }
   };
 
   return (
-    <div className="print-view-container" style={{ background: '#f8fafc', padding: '10px 0' }}>
+    <div className={`print-view-container ${isPdfExporting ? 'pdf-export-active' : ''}`} style={{ background: '#f8fafc', padding: '10px 0' }}>
       {/* PAGE 1: CLINICAL DISCHARGE SUMMARY */}
       <div className="paper-page" style={{
         background: '#ffffff',
@@ -639,7 +646,7 @@ export const PrintView: React.FC<PrintViewProps> = ({
           )}
 
           {/* GENERAL PROCEDURE DETAILS */}
-          {procedureType === 'General Procedure' && (
+          {(procedureType === 'General Procedure' || procedureType === 'Other') && (
             <div style={{ paddingLeft: '4px', fontSize: '11.5px', lineHeight: '1.7' }}>
               <div style={{ marginBottom: '6px' }}>
                 <strong>Procedure(s) performed:</strong>{' '}
