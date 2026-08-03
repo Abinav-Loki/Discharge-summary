@@ -194,8 +194,11 @@ export const PrintView: React.FC<PrintViewProps> = ({
     if (!onUpdate) return;
     const searchKey = stdName.split('/')[0].trim().toLowerCase();
     const existingIndex = medications.findIndex(m =>
-      m.medicationName.toLowerCase().includes(searchKey) ||
-      stdName.toLowerCase().includes(m.medicationName.toLowerCase())
+      !m.id.startsWith('other-') &&
+      !m.id.startsWith('custom-') && (
+        m.medicationName.toLowerCase().includes(searchKey) ||
+        stdName.toLowerCase().includes(m.medicationName.toLowerCase())
+      )
     );
 
     let updatedMeds = [...medications];
@@ -221,6 +224,65 @@ export const PrintView: React.FC<PrintViewProps> = ({
       });
     }
     onUpdate({ ...data, medications: updatedMeds });
+  };
+
+  const handleToggleCustomMedication = (id: string) => {
+    if (!onUpdate) return;
+    const existingIndex = medications.findIndex(m => m.id === id);
+    if (existingIndex >= 0) {
+      const updatedMeds = [...medications];
+      updatedMeds[existingIndex] = {
+        ...updatedMeds[existingIndex],
+        selected: !updatedMeds[existingIndex].selected
+      };
+      onUpdate({ ...data, medications: updatedMeds });
+    }
+  };
+
+  const handleDeleteCustomMedication = (id: string) => {
+    if (!onUpdate) return;
+    onUpdate({
+      ...data,
+      medications: medications.filter(m => m.id !== id)
+    });
+  };
+
+  const handleUpdateMedicationField = (medId: string, field: keyof MedicationItem, value: string) => {
+    if (!onUpdate) return;
+    
+    if (medId.startsWith('std-')) {
+      const stdName = medId.replace('std-', '');
+      const std = standardMedList.find(s => s.name === stdName);
+      if (std) {
+        const newMed: MedicationItem = {
+          id: `med-${Date.now()}`,
+          selected: true,
+          medicationName: std.name,
+          genericName: std.generic,
+          strength: std.defaultDose,
+          dosage: '1 Tab',
+          frequencyMAN: std.defaultFreq,
+          durationDays: '5',
+          route: 'Oral',
+          foodTiming: 'After Food',
+          instructions: '',
+          statusType: 'New',
+          [field]: value
+        };
+        onUpdate({ ...data, medications: [...medications, newMed] });
+      }
+      return;
+    }
+
+    const existingIndex = medications.findIndex(m => m.id === medId);
+    if (existingIndex >= 0) {
+      const updatedMeds = [...medications];
+      updatedMeds[existingIndex] = {
+        ...updatedMeds[existingIndex],
+        [field]: value
+      };
+      onUpdate({ ...data, medications: updatedMeds });
+    }
   };
 
   // Find or create "Other:" medication item in state
@@ -312,7 +374,8 @@ export const PrintView: React.FC<PrintViewProps> = ({
   // Build standard 10 medication rows
   const allMedications = standardMedList.map(std => {
     const matched = medications.find(m => 
-      !m.id.startsWith('other-') && (
+      !m.id.startsWith('other-') &&
+      !m.id.startsWith('custom-') && (
         m.medicationName.toLowerCase().includes(std.name.split('/')[0].trim().toLowerCase()) ||
         std.name.toLowerCase().includes(m.medicationName.toLowerCase())
       )
@@ -344,11 +407,7 @@ export const PrintView: React.FC<PrintViewProps> = ({
 
   // Custom added medications
   const customAddedMeds = medications.filter(m => 
-    !m.id.startsWith('other-') &&
-    !standardMedList.some(std => 
-      m.medicationName.toLowerCase().includes(std.name.split('/')[0].trim().toLowerCase()) ||
-      std.name.toLowerCase().includes(m.medicationName.toLowerCase())
-    )
+    m.id.startsWith('custom-')
   );
 
   // Filter ONLY selected medications if generating PDF or in print mode
@@ -389,6 +448,22 @@ export const PrintView: React.FC<PrintViewProps> = ({
         boxShadow: '0 8px 30px rgba(0,0,0,0.08)',
         position: 'relative'
       }}>
+        {/* Hospital Branding Letterhead */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', marginBottom: '18px', borderBottom: '1px solid #cbd5e1', paddingBottom: '12px' }}>
+          <img src="/logo.jpg" alt="ASCAS Logo" style={{ height: '75px', width: '75px', objectFit: 'contain' }} />
+          <div style={{ textAlign: 'left' }}>
+            <div style={{ fontSize: '20px', fontWeight: 'bold', margin: '0 0 2px 0', letterSpacing: '0.5px', color: '#000000' }}>
+              ASCAS FERTILITY AND WOMEN'S CENTRE
+            </div>
+            <div style={{ fontSize: '11px', color: '#333333', margin: '2px 0' }}>
+              No. 14, Arunachalam Road, next to VB World, Saligramam, Chennai – 600093
+            </div>
+            <div style={{ fontSize: '11px', color: '#333333', margin: '2px 0' }}>
+              Tel: 093452 93609 | Email: accumedspecialityclinic@gmail.com
+            </div>
+          </div>
+        </div>
+
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '18px', borderBottom: '2px solid #000000', paddingBottom: '10px' }}>
           <h1 style={{ fontSize: '22px', fontWeight: 'bold', margin: '0 0 2px 0', letterSpacing: '1px', textTransform: 'uppercase', color: '#000000' }}>
@@ -766,6 +841,9 @@ export const PrintView: React.FC<PrintViewProps> = ({
                   <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', width: '14%' }}>Dose</th>
                   <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', width: '13%' }}>Freq (M-A-N)</th>
                   <th style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', width: '13%' }}>Duration</th>
+                  {isEditMode && !isPdfExporting && (
+                    <th className="no-print" style={{ border: '1px solid #000000', padding: '4px', width: '50px', textAlign: 'center' }}>Delete</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -794,62 +872,155 @@ export const PrintView: React.FC<PrintViewProps> = ({
                       {med.isSelected ? '☑' : '☐'}
                     </td>
                     <td style={{ border: '1px solid #000000', padding: '3px 6px', fontWeight: med.isSelected ? 'bold' : 'normal' }}>
-                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                      <span 
+                        contentEditable={isEditMode} 
+                        suppressContentEditableWarning 
+                        onBlur={(e) => handleUpdateMedicationField(med.id, 'medicationName', e.currentTarget.textContent || '')}
+                        style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                      >
                         {med.medicationName}
                       </span>
                     </td>
                     <td style={{ border: '1px solid #000000', padding: '3px 6px' }}>
-                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                      <span 
+                        contentEditable={isEditMode} 
+                        suppressContentEditableWarning 
+                        onBlur={(e) => handleUpdateMedicationField(med.id, 'genericName', e.currentTarget.textContent || '')}
+                        style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                      >
                         {med.genericName}
                       </span>
                     </td>
                     <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
-                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                      <span 
+                        contentEditable={isEditMode} 
+                        suppressContentEditableWarning 
+                        onBlur={(e) => handleUpdateMedicationField(med.id, 'strength', e.currentTarget.textContent || '')}
+                        style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                      >
                         {med.strength || '______'}
                       </span>
                     </td>
                     <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center', fontWeight: 600 }}>
-                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                      <span 
+                        contentEditable={isEditMode} 
+                        suppressContentEditableWarning 
+                        onBlur={(e) => handleUpdateMedicationField(med.id, 'frequencyMAN', e.currentTarget.textContent || '')}
+                        style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                      >
                         {med.frequencyMAN || '________'}
                       </span>
                     </td>
                     <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
-                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                        {med.durationDisplay ? `${med.durationDisplay} days` : '____ days'}
-                      </span>
+                      <span 
+                        contentEditable={isEditMode} 
+                        suppressContentEditableWarning 
+                        onBlur={(e) => handleUpdateMedicationField(med.id, 'durationDays', e.currentTarget.textContent?.replace(/ days/g, '') || '')}
+                        style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                      >
+                        {med.durationDisplay || '____'}
+                      </span> days
                     </td>
+                    {isEditMode && !isPdfExporting && (
+                      <td className="no-print" style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}></td>
+                    )}
                   </tr>
                 ))}
 
                 {/* CUSTOM ADDED MEDICATIONS */}
                 {displayCustomMeds.map((med, idx) => (
-                  <tr key={med.id || `custom-${idx}`} style={{ background: '#f0f9ff' }}>
-                    <td className="no-print-checkbox" style={{ border: '1px solid #000000', padding: '4px', textAlign: 'center', fontWeight: 'bold', fontSize: '16px', color: '#0284c7' }}>☑</td>
-                    <td style={{ border: '1px solid #000000', padding: '3px 6px', fontWeight: 'bold' }}>
-                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                  <tr 
+                    key={med.id || `custom-${idx}`} 
+                    className={!med.selected ? 'unselected-med-row' : ''}
+                    style={{ background: med.selected ? '#f0f9ff' : 'transparent' }}
+                  >
+                    <td 
+                      className="no-print-checkbox"
+                      onClick={() => handleToggleCustomMedication(med.id)}
+                      title={isEditMode ? "Click to toggle prescription box" : undefined}
+                      style={{
+                        border: '1px solid #000000',
+                        padding: '4px',
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        fontSize: '16px',
+                        cursor: isEditMode ? 'pointer' : 'default',
+                        userSelect: 'none',
+                        color: med.selected ? '#0284c7' : '#64748b'
+                      }}
+                    >
+                      {med.selected ? '☑' : '☐'}
+                    </td>
+                    <td style={{ border: '1px solid #000000', padding: '3px 6px', fontWeight: med.selected ? 'bold' : 'normal' }}>
+                      <span 
+                        contentEditable={isEditMode} 
+                        suppressContentEditableWarning 
+                        onBlur={(e) => handleUpdateMedicationField(med.id, 'medicationName', e.currentTarget.textContent || '')}
+                        style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                      >
                         {med.medicationName}
                       </span>
                     </td>
                     <td style={{ border: '1px solid #000000', padding: '3px 6px' }}>
-                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                      <span 
+                        contentEditable={isEditMode} 
+                        suppressContentEditableWarning 
+                        onBlur={(e) => handleUpdateMedicationField(med.id, 'genericName', e.currentTarget.textContent || '')}
+                        style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                      >
                         {med.genericName}
                       </span>
                     </td>
                     <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
-                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                      <span 
+                        contentEditable={isEditMode} 
+                        suppressContentEditableWarning 
+                        onBlur={(e) => handleUpdateMedicationField(med.id, 'strength', e.currentTarget.textContent || '')}
+                        style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                      >
                         {med.strength}
                       </span>
                     </td>
                     <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center', fontWeight: 600 }}>
-                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
+                      <span 
+                        contentEditable={isEditMode} 
+                        suppressContentEditableWarning 
+                        onBlur={(e) => handleUpdateMedicationField(med.id, 'frequencyMAN', e.currentTarget.textContent || '')}
+                        style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                      >
                         {med.frequencyMAN}
                       </span>
                     </td>
                     <td style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
-                      <span contentEditable={isEditMode} suppressContentEditableWarning style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
-                        {med.durationDays ? `${med.durationDays} days` : '____ days'}
-                      </span>
+                      <span 
+                        contentEditable={isEditMode} 
+                        suppressContentEditableWarning 
+                        onBlur={(e) => handleUpdateMedicationField(med.id, 'durationDays', e.currentTarget.textContent?.replace(/ days/g, '') || '')}
+                        style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}
+                      >
+                        {med.durationDays}
+                      </span> days
                     </td>
+                    {isEditMode && !isPdfExporting && (
+                      <td className="no-print" style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteCustomMedication(med.id)}
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: '#ef4444',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            padding: '2px 6px'
+                          }}
+                          title="Delete medication row"
+                        >
+                          ✕
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
 
@@ -926,6 +1097,9 @@ export const PrintView: React.FC<PrintViewProps> = ({
                       {otherMed.durationDays ? `${otherMed.durationDays} days` : '____ days'}
                     </span>
                   </td>
+                  {isEditMode && !isPdfExporting && (
+                    <td className="no-print" style={{ border: '1px solid #000000', padding: '3px', textAlign: 'center' }}></td>
+                  )}
                 </tr>
               </tbody>
             </table>
@@ -1031,6 +1205,22 @@ export const PrintView: React.FC<PrintViewProps> = ({
         boxShadow: '0 8px 30px rgba(0,0,0,0.08)',
         pageBreakBefore: 'always'
       }}>
+        {/* Hospital Branding Letterhead */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', marginBottom: '18px', borderBottom: '1px solid #cbd5e1', paddingBottom: '12px' }}>
+          <img src="/logo.jpg" alt="ASCAS Logo" style={{ height: '75px', width: '75px', objectFit: 'contain' }} />
+          <div style={{ textAlign: 'left' }}>
+            <div style={{ fontSize: '20px', fontWeight: 'bold', margin: '0 0 2px 0', letterSpacing: '0.5px', color: '#000000' }}>
+              ASCAS FERTILITY AND WOMEN'S CENTRE
+            </div>
+            <div style={{ fontSize: '11px', color: '#333333', margin: '2px 0' }}>
+              No. 14, Arunachalam Road, next to VB World, Saligramam, Chennai – 600093
+            </div>
+            <div style={{ fontSize: '11px', color: '#333333', margin: '2px 0' }}>
+              Tel: 093452 93609 | Email: accumedspecialityclinic@gmail.com
+            </div>
+          </div>
+        </div>
+
         {/* Document Header */}
         <div style={{ textAlign: 'center', marginBottom: '20px', borderBottom: '2px solid #000000', paddingBottom: '10px' }}>
           <h1 style={{ fontSize: '20px', fontWeight: 'bold', margin: '0 0 2px 0', letterSpacing: '1px', textTransform: 'uppercase', color: '#000000' }}>
