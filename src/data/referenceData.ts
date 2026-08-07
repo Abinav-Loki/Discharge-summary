@@ -241,7 +241,7 @@ export const INITIAL_DISCHARGE_DATA: DischargeSummaryData = {
     descriptionOfProcedure: `Under adequate spinal / epidural anesthesia in the dorsal lithotomy position, the patient was prepped and draped in sterile fashion and the bladder emptied. The cervix was exposed with a weighted speculum and retractors and grasped gently with ring forceps. A Mersilene tape was placed in purse-string fashion circumferentially around the cervix near the level of the internal os, taking bites at approximately 12, 9, 6, and 3 o'clock and avoiding the lateral vessels. The tape was drawn snug to close the internal os and tied posteriorly, with suture ends left long to facilitate later removal. Hemostasis was confirmed. The patient tolerated the procedure well and was shifted to recovery in stable condition, with no contractions, rupture of membranes, or significant bleeding observed.`
   },
   inpatientCourse: {
-    hospitalCourse: "Patient was admitted for elective cervical cerclage due to short cervix on surveillance scan. Procedure carried out on Day 2 under spinal anesthesia without complications. Post-operatively, patient monitored in day-care recovery and shifted to ward. Vital signs remained stable. Fetal heart tones monitored post-op and confirmed normal (152 bpm). No uterine contractions or vaginal bleeding noted. Tolerating oral diet well and voiding urine clear. Discharged in stable condition.",
+    hospitalCourse: "Patient was admitted electively and pre-operative workup including investigations and anesthesia fitness were completed. Post-operatively, patient was hemodynamically stable, tolerated orally, pain managed, and was discharged in satisfactory condition with medications and follow-up advice.",
     dailyProgressNotes: "Day 1 (21/07): Admitted, pre-op workup completed. Vital signs stable.\nDay 2 (22/07): McDonald cerclage performed under Spinal Anesthesia. FHT 152 bpm. Pain managed with oral analgesics.\nDay 3 (23/07): Afebrile, no spotting, fetal heart tones 150 bpm. Ambulating well.\nDay 4 (24/07): Stable, voiding clear, cleared for discharge with discharge medication and pelvic rest instructions.",
     icuStayRequired: false,
     icuDaysCount: 0,
@@ -505,7 +505,7 @@ export const PATIENT_RECORD_DATABASE: Record<string, DischargeSummaryData> = {
     },
     inpatientCourse: {
       ...INITIAL_DISCHARGE_DATA.inpatientCourse,
-      hospitalCourse: "Patient presented with lower abdominal cramps and vaginal bleeding following incomplete miscarriage. Admitted to Day Care ward. D&C performed under MAC sedation without complications. Post-op recovery uneventful. Minimal spotting. Vital signs stable. Discharged home on Day 1 with D&C post-op instructions and follow-up appointment.",
+      hospitalCourse: "Patient was admitted electively and pre-operative workup including investigations and anesthesia fitness were completed. Post-operatively, patient was hemodynamically stable, tolerated orally, pain managed, and was discharged in satisfactory condition with medications and follow-up advice.",
       dailyProgressNotes: "Day 1 (24/07 08:00): Admitted for Day Care D&C.\nDay 1 (24/07 10:30): D&C completed cleanly under MAC sedation.\nDay 1 (24/07 18:00): Voiding clear, afebrile, minimal spotting. Discharged home."
     },
     medications: [

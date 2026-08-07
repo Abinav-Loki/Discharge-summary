@@ -511,7 +511,7 @@ export const PrintView: React.FC<PrintViewProps> = ({
           <div />
 
           <div>
-            <strong>Attending surgeon:</strong>{' '}
+            <strong>Anesthesiologist:</strong>{' '}
             <span contentEditable={isEditMode} suppressContentEditableWarning onBlur={(e) => handleTextChange(['patientInfo', 'attendingDoctor'], e.currentTarget.textContent || '')} style={{ outline: isEditMode ? '1px dashed #0284c7' : 'none' }}>
               {patientInfo.attendingDoctor || '____________________________________'}
             </span>
@@ -1202,24 +1202,9 @@ export const PrintView: React.FC<PrintViewProps> = ({
         maxWidth: '850px',
         margin: '0 auto',
         border: '1px solid #cbd5e1',
-        boxShadow: '0 8px 30px rgba(0,0,0,0.08)',
-        pageBreakBefore: 'always'
+        boxShadow: '0 8px 30px rgba(0,0,0,0.08)'
       }}>
-        {/* Hospital Branding Letterhead */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', marginBottom: '18px', borderBottom: '1px solid #cbd5e1', paddingBottom: '12px' }}>
-          <img src="/logo.jpg" alt="ASCAS Logo" style={{ height: '75px', width: '75px', objectFit: 'contain' }} />
-          <div style={{ textAlign: 'left' }}>
-            <div style={{ fontSize: '20px', fontWeight: 'bold', margin: '0 0 2px 0', letterSpacing: '0.5px', color: '#000000' }}>
-              ASCAS FERTILITY AND WOMEN'S CENTRE
-            </div>
-            <div style={{ fontSize: '11px', color: '#333333', margin: '2px 0' }}>
-              No. 14, Arunachalam Road, next to VB World, Saligramam, Chennai – 600093
-            </div>
-            <div style={{ fontSize: '11px', color: '#333333', margin: '2px 0' }}>
-              Tel: 093452 93609 | Email: accumedspecialityclinic@gmail.com
-            </div>
-          </div>
-        </div>
+
 
         {/* Document Header */}
         <div style={{ textAlign: 'center', marginBottom: '20px', borderBottom: '2px solid #000000', paddingBottom: '10px' }}>

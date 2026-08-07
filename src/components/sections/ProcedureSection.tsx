@@ -231,7 +231,7 @@ export const ProcedureSection: React.FC<ProcedureSectionProps> = ({
         {/* Surgical Team & Anaesthesia */}
         <div className="form-grid-4" style={{ marginBottom: '16px' }}>
           <div className="form-group">
-            <label className="form-label">Attending Surgeon</label>
+            <label className="form-label">Anesthesiologist</label>
             <input
               type="text"
               className="form-control"
